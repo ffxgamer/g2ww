@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: g2ww
+  labels:
+    app:  g2ww
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  g2ww
+  template:
+    metadata:
+      labels:
+        app:  g2ww
+    spec:
+      containers:
+        - name:  g2ww
+          image: "ffxgamer/g2ww:alpine"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name:  g2ww
+              containerPort: 2408
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "10m"
+              memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: g2ww
+  labels:
+    app:  g2ww
+spec:
+  type: ClusterIP
+  ports:
+    - port: 2408
+      targetPort:  g2ww
+      protocol: TCP
+      name:  g2ww
+  selector:
+      app:  g2ww
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: g2ww
+  labels:
+    app:  g2ww
+spec:
+  rules:
+    - host:  g2ww.sy
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: g2ww
+              servicePort:  g2ww
